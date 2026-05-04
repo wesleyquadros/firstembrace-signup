@@ -9,22 +9,22 @@
 </style>
 </head>
 <body>
-<div id="signup-wrapper" style="background:#FFFAF6; padding:24px; border-radius:8px; font-family:Helvetica,Arial,sans-serif; max-width:600px;">
-  <h2 style="color:#333; margin-top:0;">Lead the fight for newborn survival</h2>
-  <p style="font-size:14px; color:#333; margin:0 0 12px 0;">
+<div id="signup-wrapper" style="background:#FFFAF6; padding:48px 32px; border-radius:8px; font-family:Helvetica,Arial,sans-serif; max-width:800px; margin:0 auto; text-align:center;">
+  <h2 style="color:#333; margin-top:0; font-size:48px; margin-bottom:32px;">Lead the fight for newborn survival</h2>
+  <p style="font-size:22px; color:#333; margin:0 0 16px 0;">
     We communicate our work through our newsletter, transparently.
   </p>
-  <p style="font-size:14px; color:#333; margin:0 0 20px 0;">
+  <p style="font-size:22px; color:#333; margin:0 0 32px 0;">
     Feedback is welcome by reply.
   </p>
 
-  <form id="signup-form" novalidate>
-    <label for="mce-EMAIL" style="display:block; font-size:14px; margin-bottom:6px; color:#333;">
+  <form id="signup-form" novalidate style="text-align:left; max-width:500px; margin:0 auto;">
+    <label for="mce-EMAIL" style="display:block; font-size:20px; margin-bottom:10px; color:#333;">
       Email Address
     </label>
     <input type="email" name="EMAIL" id="mce-EMAIL" required
-      style="width:100%; padding:10px; font-size:14px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box; margin-bottom:6px;">
-    <p style="font-size:12px; color:#888; margin:0 0 16px 0;">
+      style="width:100%; padding:14px; font-size:18px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box; margin-bottom:10px;">
+    <p style="font-size:16px; color:#888; margin:0 0 24px 0;">
       We will not share your data. You can unsubscribe anytime.
     </p>
 
@@ -33,13 +33,15 @@
       <input type="text" name="b_4066ce1f99dfa9ae24ee87027_d2b4845008" tabindex="-1" value="">
     </div>
 
-    <button type="submit" id="submit-btn"
-      style="background:#9FC9F1; color:#000; padding:10px 24px; font-size:16px; font-weight:600; border:none; border-radius:4px; cursor:pointer;">
-      Subscribe
-    </button>
+    <div style="text-align:center;">
+      <button type="submit" id="submit-btn"
+        style="background:#9FC9F1; color:#000; padding:16px 40px; font-size:24px; font-weight:600; border:none; border-radius:4px; cursor:pointer;">
+        Subscribe
+      </button>
+    </div>
   </form>
 
-  <div id="response-message" style="margin-top:16px; font-size:14px; display:none;"></div>
+  <div id="response-message" style="margin-top:24px; font-size:18px; display:none;"></div>
 </div>
 
 <script>
@@ -61,7 +63,6 @@
     btn.disabled = true;
     btn.textContent = 'Subscribing...';
 
-    // Mailchimp JSONP endpoint — note /post-json instead of /post, and c= callback param
     var callbackName = 'mcCallback_' + Date.now();
     var url = 'https://firstembrace.us14.list-manage.com/subscribe/post-json?u=4066ce1f99dfa9ae24ee87027&id=d2b4845008&f_id=0041b4e5f0' +
               '&EMAIL=' + encodeURIComponent(email) +
@@ -76,14 +77,12 @@
         document.getElementById('signup-form').style.display = 'none';
       } else {
         msg.style.color = '#c0392b';
-        // Strip HTML from Mailchimp's error messages
         var tmp = document.createElement('div');
         tmp.innerHTML = data.msg || 'Something went wrong. Please try again.';
         msg.textContent = tmp.textContent;
         btn.disabled = false;
         btn.textContent = 'Subscribe';
       }
-      // Cleanup
       delete window[callbackName];
       script.remove();
     };
