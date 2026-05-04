@@ -9,7 +9,7 @@
 </style>
 </head>
 <body>
-<div style="background:#FFFAF6; padding:24px; border-radius:8px; font-family:Helvetica,Arial,sans-serif; max-width:600px;">
+<div id="signup-wrapper" style="background:#FFFAF6; padding:24px; border-radius:8px; font-family:Helvetica,Arial,sans-serif; max-width:600px;">
   <h2 style="color:#333; margin-top:0;">Lead the fight for newborn survival</h2>
   <p style="font-size:14px; color:#333; margin:0 0 12px 0;">
     We communicate our work through our newsletter, transparently.
@@ -18,7 +18,7 @@
     Feedback is welcome by reply.
   </p>
 
-  <form action="https://firstembrace.us14.list-manage.com/subscribe/post?u=4066ce1f99dfa9ae24ee87027&amp;id=d2b4845008&amp;f_id=0041b4e5f0" method="post" target="_blank" novalidate>
+  <form id="signup-form" novalidate>
     <label for="mce-EMAIL" style="display:block; font-size:14px; margin-bottom:6px; color:#333;">
       Email Address
     </label>
@@ -33,9 +33,72 @@
       <input type="text" name="b_4066ce1f99dfa9ae24ee87027_d2b4845008" tabindex="-1" value="">
     </div>
 
-    <input type="submit" name="subscribe" value="Subscribe"
+    <button type="submit" id="submit-btn"
       style="background:#9FC9F1; color:#000; padding:10px 24px; font-size:16px; font-weight:600; border:none; border-radius:4px; cursor:pointer;">
+      Subscribe
+    </button>
   </form>
+
+  <div id="response-message" style="margin-top:16px; font-size:14px; display:none;"></div>
 </div>
+
+<script>
+  document.getElementById('signup-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var email = document.getElementById('mce-EMAIL').value.trim();
+    var honeypot = document.querySelector('input[name="b_4066ce1f99dfa9ae24ee87027_d2b4845008"]').value;
+    var btn = document.getElementById('submit-btn');
+    var msg = document.getElementById('response-message');
+
+    if (!email) {
+      msg.style.display = 'block';
+      msg.style.color = '#c0392b';
+      msg.textContent = 'Please enter your email address.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Subscribing...';
+
+    // Mailchimp JSONP endpoint — note /post-json instead of /post, and c= callback param
+    var callbackName = 'mcCallback_' + Date.now();
+    var url = 'https://firstembrace.us14.list-manage.com/subscribe/post-json?u=4066ce1f99dfa9ae24ee87027&id=d2b4845008&f_id=0041b4e5f0' +
+              '&EMAIL=' + encodeURIComponent(email) +
+              '&b_4066ce1f99dfa9ae24ee87027_d2b4845008=' + encodeURIComponent(honeypot) +
+              '&c=' + callbackName;
+
+    window[callbackName] = function(data) {
+      msg.style.display = 'block';
+      if (data.result === 'success') {
+        msg.style.color = '#2e7d32';
+        msg.textContent = 'Thank you! Please check your email to confirm.';
+        document.getElementById('signup-form').style.display = 'none';
+      } else {
+        msg.style.color = '#c0392b';
+        // Strip HTML from Mailchimp's error messages
+        var tmp = document.createElement('div');
+        tmp.innerHTML = data.msg || 'Something went wrong. Please try again.';
+        msg.textContent = tmp.textContent;
+        btn.disabled = false;
+        btn.textContent = 'Subscribe';
+      }
+      // Cleanup
+      delete window[callbackName];
+      script.remove();
+    };
+
+    var script = document.createElement('script');
+    script.src = url;
+    script.onerror = function() {
+      msg.style.display = 'block';
+      msg.style.color = '#c0392b';
+      msg.textContent = 'Network error. Please try again.';
+      btn.disabled = false;
+      btn.textContent = 'Subscribe';
+    };
+    document.body.appendChild(script);
+  });
+</script>
 </body>
 </html>
